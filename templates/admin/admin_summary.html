@@ -55,23 +55,23 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <a class="navbar-brand" href="{{ url_for('admin_home') }}">Admin Dashboard</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="home.html">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{{ url_for('admin_home') }}">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="search_service_request.html">Search</a>
+                    <a class="nav-link" href="{{ url_for('search_service_request') }}">Search</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="admin_summary.html">Summary</a>
+                    <a class="nav-link" href="{{ url_for('admin_summary') }}">Summary</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">Logout</a>
+                    <a class="nav-link" href="{{ url_for('home') }}">Logout</a>
                 </li>
             </ul>
         </div>
@@ -85,13 +85,27 @@
             <div class="col-md-6">
                 <div class="chart-container">
                     <h2>Service Requests</h2>
-                    <div class="value" id="serviceRequestsValue">0</div>
+                    <div class="value">0</div>  <!-- Set value to zero -->
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="chart-container">
                     <h2>Overall Customer Ratings</h2>
-                    <div class="value" id="customerRatingsValue">0</div>
+                    <div class="value">{{ overall_rating | round(1) }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h2>Number of Customers</h2>
+                    <div class="value">{{ num_customers }}</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h2>Number of Professionals</h2>
+                    <div class="value">{{ num_professionals }}</div>
                 </div>
             </div>
         </div>

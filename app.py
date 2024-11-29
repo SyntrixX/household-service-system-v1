@@ -171,7 +171,7 @@ def service_remarks():
         service_id = request.form.get('service_id')
         remark = request.form.get('remark')
         customer_id = current_user.id
-        service_remark = ServiceRemark(service_id=service_id, customer_id=customer_id, remark=remark)
+        service_remark = ServiceRemark(service_id=service_id, customer_id=customer_id, remark=remark)  # Remove rating
         db.session.add(service_remark)
         db.session.commit()
         flash('Remark added successfully!', 'success')
@@ -201,6 +201,20 @@ def professional_search_service():
 @login_required
 def professional_summary():
     return render_template('professional/professional_summary.html')
+
+@app.route('/admin_summary')
+@login_required
+def admin_summary():
+    num_customers = User.query.filter_by(role='customer').count()
+    num_professionals = Professional.query.count()
+    overall_rating = 0  # Remove calculation of overall_rating
+    service_requests = 0  # Set service requests to zero
+    return render_template('admin/admin_summary.html', num_customers=num_customers, num_professionals=num_professionals, overall_rating=overall_rating, service_requests=service_requests)
+
+@app.route('/search_service_request')
+@login_required
+def search_service_request():
+    return render_template('admin/search_service_request.html')
 
 @app.errorhandler(500)
 def internal_error(error):

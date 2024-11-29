@@ -52,12 +52,12 @@
 <body class="bg-gray-100 p-6">
     <nav class="bg-gray-800 p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="admin_home.html" class="text-white text-lg font-bold">Admin Dashboard</a>
+            <a href="{{ url_for('admin_home') }}" class="text-white text-lg font-bold">Admin Dashboard</a>
             <div>
-                <a href="admin_home.html" class="text-gray-300 hover:text-white mx-2">Home</a>
-                <a href="search_service_requests.html" class="text-gray-300 hover:text-white mx-2">Search</a>
-                <a href="admin_summary.html" class="text-gray-300 hover:text-white mx-2">Summary</a>
-                <a href="home.html" class="text-gray-300 hover:text-white mx-2">Logout</a>
+                <a href="{{ url_for('admin_home') }}" class="text-gray-300 hover:text-white mx-2">Home</a>
+                <a href="{{ url_for('search_service_request') }}" class="text-gray-300 hover:text-white mx-2">Search</a>
+                <a href="{{ url_for('admin_summary') }}" class="text-gray-300 hover:text-white mx-2">Summary</a>
+                <a href="{{ url_for('home') }}" class="text-gray-300 hover:text-white mx-2">Logout</a>
             </div>
         </div>
     </nav>

@@ -16,7 +16,6 @@ class User(UserMixin, db.Model):  # Add UserMixin here
     state = db.Column(db.String(100), nullable=False)
     zip = db.Column(db.String(20), nullable=False)
     country = db.Column(db.String(100), nullable=False)
-    profession = db.Column(db.String(100), nullable=True)  # Add profession field
     services = db.relationship('Service', backref='user', lazy=True, foreign_keys='Service.professional_id')
 
     def set_password(self, password):
