@@ -32,16 +32,17 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">Home</a>
+                    <a class="nav-link" href="{{ url_for('customer_home') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="customer_summary.html">Summary</a>
+                    <a class="nav-link" href="{{ url_for('customer_summary') }}">Summary</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="logout.html">Logout</a>
+                    <a class="nav-link" href="{{ url_for('home') }}">Logout</a>
                 </li>
                 <li class="nav-item">
                     <form class="form-inline">
+                        <form class="form-inline" action="{{ url_for('search_service') }}" method="get">
                         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </form>

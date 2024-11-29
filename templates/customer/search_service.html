@@ -19,9 +19,9 @@
                 <span class="text-xl font-bold">CleanNest</span>
             </a>
             <div class="hidden md:flex space-x-4">
-                <a href="home.html" class="text-gray-700 hover:text-indigo-600">Home</a>
-                <a href="customer_summary.html" class="text-gray-700 hover:text-indigo-600">Summary</a>
-                <a href="logout.html" class="text-gray-700 hover:text-indigo-600">Logout</a>
+                <a href="{{ url_for('customer_home') }}" class="text-gray-700 hover:text-indigo-600">Home</a>
+                <a href={{ url_for('customer_summary') }}" class="text-gray-700 hover:text-indigo-600">Summary</a>
+                <a href="{{ url_for('home') }}" class="text-gray-700 hover:text-indigo-600">Logout</a>
             </div>
             <div class="md:hidden">
                 <button id="menu-button" class="text-gray-700 focus:outline-none">
@@ -30,9 +30,9 @@
             </div>
         </div>
         <div id="mobile-menu" class="hidden md:hidden">
-            <a href="home.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Home</a>
-            <a href="customer_summary.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Summary</a>
-            <a href="logout.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Logout</a>
+            <a href="{{ url_for('home') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Home</a>
+            <a href="{{ url_for('customer_summary') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Summary</a>
+            <a href="{{ url_for('home') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Logout</a>
         </div>
     </nav>
 
@@ -51,6 +51,11 @@
         <div id="services-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Real-time service items will be injected here by JavaScript -->
         </div>
+
+        <h2 class="text-2xl font-semibold mt-8 mb-4">Service History</h2>
+        <div id="service-history" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Booked services will be injected here by JavaScript -->
+        </div>
     </div>
 
     <script>
@@ -63,29 +68,65 @@
             }
         });
 
-        // Simulate fetching real-time data
-        const services = [
-            { name: 'Service Name 1', rating: 4.5, price: 100 },
-            { name: 'Service Name 2', rating: 4.0, price: 80 },
-            { name: 'Service Name 3', rating: 4.8, price: 120 },
-            { name: 'Service Name 4', rating: 3.9, price: 70 },
-            { name: 'Service Name 5', rating: 4.2, price: 90 },
-            { name: 'Service Name 6', rating: 4.7, price: 110 }
-        ];
+        // Fetch real-time data from the database
+        fetch('/api/services')
+            .then(response => response.json())
+            .then(data => {
+                const servicesContainer = document.getElementById('services-container');
+                data.services.forEach(service => {
+                    const serviceElement = document.createElement('div');
+                    serviceElement.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md');
+                    serviceElement.innerHTML = `
+                        <h3 class="text-xl font-bold mb-2">${service.name}</h3>
+                        <p class="text-gray-600 mb-2">Rating: ${service.rating}/5</p>
+                        <p class="text-gray-600 mb-2">Base Price: $${service.price}</p>
+                        <button class="mt-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Book</button>
+                    `;
+                    serviceElement.querySelector('button').addEventListener('click', () => {
+                        bookService(service.id);
+                    });
+                    servicesContainer.appendChild(serviceElement);
+                });
+            });
 
-        const servicesContainer = document.getElementById('services-container');
+        function bookService(serviceId) {
+            fetch(`/api/book_service/${serviceId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    addServiceToHistory(data.service);
+                } else {
+                    alert('Failed to book service');
+                }
+            });
+        }
 
-        services.forEach(service => {
-            const serviceElement = document.createElement('div');
-            serviceElement.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md');
-            serviceElement.innerHTML = `
+        function addServiceToHistory(service) {
+            const serviceHistoryContainer = document.getElementById('service-history');
+            const historyElement = document.createElement('div');
+            historyElement.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md');
+            historyElement.innerHTML = `
                 <h3 class="text-xl font-bold mb-2">${service.name}</h3>
                 <p class="text-gray-600 mb-2">Rating: ${service.rating}/5</p>
                 <p class="text-gray-600 mb-2">Base Price: $${service.price}</p>
-                <button class="mt-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Book</button>
             `;
-            servicesContainer.appendChild(serviceElement);
-        });
+            serviceHistoryContainer.appendChild(historyElement);
+        }
+
+        // Fetch service history from the database
+        fetch('/api/service_history')
+            .then(response => response.json())
+            .then(data => {
+                const serviceHistoryContainer = document.getElementById('service-history');
+                data.history.forEach(service => {
+                    addServiceToHistory(service);
+                });
+            });
     </script>
 </body>
 </html>

@@ -10,15 +10,19 @@ from flask_login import LoginManager, current_user, login_required, login_user, 
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash
+from flask_sqlalchemy import SQLAlchemy
 
 # Local imports
 from forms import LoginForm, ProfessionalRegistrationForm, CustomerRegistrationForm
-from models import Service, User, db
+from models import Service, User, ServiceRemark, db
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'your_secret_key'
-db.init_app(app)
+
+db.init_app(app)  # Ensure the SQLAlchemy instance is properly initialized with the Flask app
+
 migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)
 login_manager = LoginManager(app)
@@ -144,6 +148,38 @@ def professional_home():
 def customer_home():
     return render_template('customer/customer_home.html')
 
+@app.route('/customer_summary', methods=['GET'])
+@login_required
+def customer_summary():
+    return render_template('customer/customer_summary.html')
+
+@app.route('/search_service', methods=['GET', 'POST'])
+@login_required
+def search_service():
+    if request.method == 'POST':
+        # Implement search logic here
+        pass
+    return render_template('customer/search_service.html')
+
+@app.route('/service_remarks', methods=['GET', 'POST'])
+@login_required
+def service_remarks():
+    if request.method == 'POST':
+        service_id = request.form.get('service_id')
+        remark = request.form.get('remark')
+        customer_id = current_user.id
+        service_remark = ServiceRemark(service_id=service_id, customer_id=customer_id, remark=remark)
+        db.session.add(service_remark)
+        db.session.commit()
+        flash('Remark added successfully!', 'success')
+    return render_template('customer/service_remarks.html')
+
+@app.route('/profile', methods=['GET'])
+@login_required
+def profile():
+    user = User.query.get(current_user.id)
+    return render_template('customer/profile.html', user=user)
+
 @app.errorhandler(500)
 def internal_error(error):
     db.session.rollback()
@@ -153,6 +189,8 @@ def internal_error(error):
 
 with app.app_context():
     db.create_all()
+
+import views  # Ensure views are imported to register the routes
 
 if __name__ == '__main__':
     handler = RotatingFileHandler('error.log', maxBytes=10000, backupCount=1)

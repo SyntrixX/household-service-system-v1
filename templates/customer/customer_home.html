@@ -22,7 +22,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{{ url_for('index') }}">
+        <a class="navbar-brand" href="{{ url_for('customer_home') }}">
             CleanNest
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,22 +31,22 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">Home</a>
+                    <a class="nav-link" href="customer_home">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="customer_summary.html">Summary</a>
+                    <a class="nav-link" href="{{ url_for('customer_summary') }}">Summary</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                 </li>
                 <li class="nav-item">
-                    <form class="form-inline" method="GET">
+                    <form class="form-inline" method="POST" action="{{ url_for('search_service') }}">
                         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </form>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="profile.html">
+                    <a class="nav-link" href="{{ url_for('profile') }}">
                         <i class="fas fa-user"></i> Profile
                     </a>
                 </li>
@@ -86,10 +86,10 @@
                     <h5 class="text-uppercase">Quick Links</h5>
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <a href="{{ url_for('index') }}" class="text-dark">Home</a>
+                            <a href="{{ url_for('customer_home') }}" class="text-dark">Home</a>
                         </li>
                         <li>
-                            <a href="customer_summary.html" class="text-dark">Summary</a>
+                            <a href="{{ url_for('customer_summary') }}" class="text-dark">Summary</a>
                         </li>
                         <li>
                             <a href="{{ url_for('logout') }}" class="text-dark">Logout</a>
@@ -213,7 +213,7 @@
                             <p class="card-text">Professional Name: ${service.technician}</p>
                             <p class="card-text">Phone No.: ${service.phone}</p>
                             <p class="card-text">Status: ${service.status}</p>
-                            <a href="service_remarks.html" class="btn btn-primary">Close Service</a>
+                            <a href="{{ url_for('service_remarks') }}" class="btn btn-primary">Close Service</a>
                         </div>
                     </div>
                 `;

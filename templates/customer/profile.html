@@ -18,14 +18,14 @@
  <body class="bg-gray-100">
   <nav class="bg-white shadow-md">
    <div class="container mx-auto p-4 flex justify-between items-center">
-    <a class="text-2xl font-bold text-gray-800" href="#">
+    <a class="text-2xl font-bold text-gray-800" href="{{ url_for('customer_home') }}">
      CleanNest
     </a>
     <div class="space-x-4">
-     <a class="text-gray-600 hover:text-gray-800" href="customer_home.html">
+     <a class="text-gray-600 hover:text-gray-800" href="{{ url_for('customer_home') }}">
       Home
      </a>
-     <a class="text-gray-600 hover:text-gray-800" href="home.html">
+     <a class="text-gray-600 hover:text-gray-800" href="{{ url_for('home') }}">
       Logout
      </a>
     </div>
@@ -37,10 +37,10 @@
      <img alt="Profile picture of the user" class="w-24 h-24 rounded-full" height="100" src="https://storage.googleapis.com/a1aa/image/rqSAqcJ2MNJ0DVce7wzqLPXzjrMMEtOFVSCVcbpymAV2Jz6JA.jpg" width="100"/>
      <div>
       <h1 class="text-2xl font-bold">
-       John Doe
+       {{ user.name }}
       </h1>
       <p class="text-gray-600">
-       john.doe@example.com
+       {{ user.email }}
       </p>
      </div>
     </div>
@@ -53,25 +53,49 @@
        <strong>
         Full Name:
        </strong>
-       John Doe
+       {{ user.name }}
       </p>
       <p>
        <strong>
         Email:
        </strong>
-       john.doe@example.com
+       {{ user.email }}
       </p>
       <p>
        <strong>
         Phone:
        </strong>
-       (123) 456-7890
+       {{ user.phone }}
       </p>
       <p>
        <strong>
         Address:
        </strong>
-       123 Main St, Anytown, USA
+       {{ user.address }}
+      </p>
+      <p>
+       <strong>
+        City:
+       </strong>
+       {{ user.city }}
+      </p>
+      <p>
+       <strong>
+        State:
+       </strong>
+       {{ user.state }}
+      </p>
+      <p>
+       <strong>
+        Zip:
+       </strong>
+       {{ user.zip }}
+      </p>
+      <p>
+       <strong>
+        Country:
+       </strong>
+       {{ user.country }}
       </p>
      </div>
      <div>

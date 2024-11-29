@@ -34,3 +34,19 @@ class Service(db.Model):
     professional_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     status = db.Column(db.String(50), nullable=False)  # 'open', 'accepted', 'completed'
+    rating = db.Column(db.Float, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+
+class Booking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    service_id = db.Column(db.Integer, db.ForeignKey('service.id'), nullable=False)
+    customer_id = db.Column(db.Integer, nullable=False)
+    service = db.relationship('Service', backref=db.backref('bookings', lazy=True))
+
+class ServiceRemark(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    service_id = db.Column(db.Integer, db.ForeignKey('service.id'), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    remark = db.Column(db.String(500), nullable=False)
+    service = db.relationship('Service', backref=db.backref('remarks', lazy=True))
+    customer = db.relationship('User', backref=db.backref('remarks', lazy=True))
