@@ -1,0 +1,189 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CleanNest - Household Service System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .navbar-nav .form-inline {
+            display: flex;
+            align-items: center;
+        }
+        .navbar-brand {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">
+            CleanNest
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="home.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="customer_summary.html">Summary</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="logout.html">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <form class="form-inline">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Customer Summary</h1>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <!-- Requested Box -->
+            <div class="bg-white p-6 rounded-lg shadow-lg flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold">Requested</h2>
+                    <p id="requestedCount" class="text-3xl font-bold text-blue-500">0</p>
+                </div>
+                <i class="fas fa-tasks text-4xl text-blue-500"></i>
+            </div>
+            <!-- Closed Box -->
+            <div class="bg-white p-6 rounded-lg shadow-lg flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold">Closed</h2>
+                    <p id="closedCount" class="text-3xl font-bold text-green-500">0</p>
+                </div>
+                <i class="fas fa-check-circle text-4xl text-green-500"></i>
+            </div>
+            <!-- Assigned Box -->
+            <div class="bg-white p-6 rounded-lg shadow-lg flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold">Assigned</h2>
+                    <p id="assignedCount" class="text-3xl font-bold text-yellow-500">0</p>
+                </div>
+                <i class="fas fa-user-check text-4xl text-yellow-500"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data for the charts
+        const requestedData = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+            datasets: [{
+                label: 'Requested',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        const closedData = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+            datasets: [{
+                label: 'Closed',
+                data: [2, 3, 20, 5, 1, 4],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        const assignedData = {
+            labels: ['Team A', 'Team B', 'Team C', 'Team D'],
+            datasets: [{
+                label: 'Assigned',
+                data: [12, 15, 8, 5],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Configurations for the charts
+        const requestedConfig = {
+            type: 'bar',
+            data: requestedData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        const closedConfig = {
+            type: 'line',
+            data: closedData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        const assignedConfig = {
+            type: 'pie',
+            data: assignedData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Render the charts
+        window.onload = function() {
+            // Update real-time numbers
+            document.getElementById('requestedCount').innerText = requestedData.datasets[0].data.reduce((a, b) => a + b, 0);
+            document.getElementById('closedCount').innerText = closedData.datasets[0].data.reduce((a, b) => a + b, 0);
+            document.getElementById('assignedCount').innerText = assignedData.datasets[0].data.reduce((a, b) => a + b, 0);
+        };
+    </script>
+</body>
+</html>

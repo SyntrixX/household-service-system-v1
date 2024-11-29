@@ -1,0 +1,363 @@
+<html>
+<head>
+    <title>Admin Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 90%;
+            margin: 20px auto;
+        }
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        .card h2 {
+            margin-top: 0;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .table th, .table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .table th {
+            background-color: #f8f8f8;
+        }
+        .action-btn {
+            color: #007bff;
+            cursor: pointer;
+        }
+        .new-service-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .new-service-btn:hover {
+            background-color: #0056b3;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+        .form-group .cancel-btn {
+            background-color: #6c757d;
+            margin-left: 10px;
+        }
+        .form-group .cancel-btn:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="admin_home.html" class="text-white text-lg font-bold">Admin Dashboard</a>
+            <div>
+                <a href="admin_home.html" class="text-gray-300 hover:text-white mx-2">Home</a>
+                <a href="search_service_requests.html" class="text-gray-300 hover:text-white mx-2">Search</a>
+                <a href="admin_summary.html" class="text-gray-300 hover:text-white mx-2">Summary</a>
+                <a href="home.html" class="text-gray-300 hover:text-white mx-2">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>Services</h2>
+            <table class="table" id="servicesTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Service Name</th>
+                        <th>Base Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Real-time data will be inserted here -->
+                </tbody>
+            </table>
+            <a href="#" class="new-service-btn" id="newServiceBtn">+ New Service</a>
+        </div>
+
+        <div class="card">
+            <h2>Professionals</h2>
+            <table class="table" id="professionalsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Experience (Yrs)</th>
+                        <th>Service Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Real-time data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Service Requests</h2>
+            <table class="table" id="serviceRequestsTable">
+                <thead>
+                    <tr>
+                        <th>Assigned Professional</th>
+                        <th>Requested Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Real-time data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="newServiceModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Add New Service</h2>
+            <div class="form-group">
+                <label for="serviceName">Service Name</label>
+                <input type="text" id="serviceName" name="serviceName" style="border: 1px solid #ccc;">
+            </div>
+            <div class="form-group">
+                <label for="basePrice">Base Price</label>
+                <input type="text" id="basePrice" name="basePrice" style="border: 1px solid #ccc;">
+            </div>
+            <div class="form-group">
+                <button type="button" id="addServiceBtn">Add Service</button>
+                <button type="button" class="cancel-btn" id="cancelAddServiceBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editServiceModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeEditModal">&times;</span>
+            <h2>Edit Service</h2>
+            <div class="form-group">
+                <label for="editServiceName">Service Name</label>
+                <input type="text" id="editServiceName" name="editServiceName" style="border: 1px solid #ccc;">
+            </div>
+            <div class="form-group">
+                <label for="editBasePrice">Base Price</label>
+                <input type="text" id="editBasePrice" name="editBasePrice" style="border: 1px solid #ccc;">
+            </div>
+            <div class="form-group">
+                <button type="button" id="updateServiceBtn">Update Service</button>
+                <button type="button" class="cancel-btn" id="cancelEditServiceBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('newServiceBtn').onclick = function() {
+            document.getElementById('newServiceModal').style.display = 'block';
+        }
+
+        document.getElementById('closeModal').onclick = function() {
+            document.getElementById('newServiceModal').style.display = 'none';
+        }
+
+        document.getElementById('cancelAddServiceBtn').onclick = function() {
+            document.getElementById('newServiceModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('newServiceModal')) {
+                document.getElementById('newServiceModal').style.display = 'none';
+            }
+            if (event.target == document.getElementById('editServiceModal')) {
+                document.getElementById('editServiceModal').style.display = 'none';
+            }
+        }
+
+        document.getElementById('addServiceBtn').onclick = function() {
+            // Add your logic to add the new service here
+            alert('New service added!');
+            document.getElementById('newServiceModal').style.display = 'none';
+        }
+
+        var editButtons = document.getElementsByClassName('edit-btn');
+        for (var i = 0; i < editButtons.length; i++) {
+            editButtons[i].onclick = function() {
+                var serviceId = this.getAttribute('data-id');
+                var serviceName = this.getAttribute('data-name');
+                var basePrice = this.getAttribute('data-price');
+
+                document.getElementById('editServiceName').value = serviceName;
+                document.getElementById('editBasePrice').value = basePrice;
+
+                document.getElementById('editServiceModal').style.display = 'block';
+            }
+        }
+
+        document.getElementById('closeEditModal').onclick = function() {
+            document.getElementById('editServiceModal').style.display = 'none';
+        }
+
+        document.getElementById('cancelEditServiceBtn').onclick = function() {
+            document.getElementById('editServiceModal').style.display = 'none';
+        }
+
+        document.getElementById('updateServiceBtn').onclick = function() {
+            // Add your logic to update the service here
+            alert('Service updated!');
+            document.getElementById('editServiceModal').style.display = 'none';
+        }
+
+        var deleteButtons = document.getElementsByClassName('delete-btn');
+        for (var i = 0; i < deleteButtons.length; i++) {
+            deleteButtons[i].onclick = function() {
+                var serviceId = this.getAttribute('data-id');
+                // Add your logic to delete the service here
+                alert('Service with ID ' + serviceId + ' deleted!');
+                // Optionally, remove the row from the table
+                this.closest('tr').remove();
+            }
+        }
+
+        // Function to fetch and update real-time data
+        function fetchData() {
+            // Fetch services data
+            fetch('/api/services')
+                .then(response => response.json())
+                .then(data => {
+                    const servicesTableBody = document.querySelector('#servicesTable tbody');
+                    servicesTableBody.innerHTML = '';
+                    data.forEach(service => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${service.id}</td>
+                            <td>${service.name}</td>
+                            <td>$${service.basePrice}</td>
+                            <td>
+                                <span class="action-btn edit-btn" data-id="${service.id}" data-name="${service.name}" data-price="${service.basePrice}">Edit</span> | 
+                                <span class="action-btn delete-btn" data-id="${service.id}">Delete</span>
+                            </td>
+                        `;
+                        servicesTableBody.appendChild(row);
+                    });
+                });
+
+            // Fetch professionals data
+            fetch('/api/professionals')
+                .then(response => response.json())
+                .then(data => {
+                    const professionalsTableBody = document.querySelector('#professionalsTable tbody');
+                    professionalsTableBody.innerHTML = '';
+                    data.forEach(professional => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${professional.id}</td>
+                            <td>${professional.name}</td>
+                            <td>${professional.experience}</td>
+                            <td>${professional.serviceName}</td>
+                            <td>
+                                <span class="action-btn edit-btn" data-id="${professional.id}" data-name="${professional.name}" data-experience="${professional.experience}" data-service="${professional.serviceName}">Edit</span> | 
+                                <span class="action-btn delete-btn" data-id="${professional.id}">Delete</span>
+                            </td>
+                        `;
+                        professionalsTableBody.appendChild(row);
+                    });
+                });
+
+            // Fetch service requests data
+            fetch('/api/service-requests')
+                .then(response => response.json())
+                .then(data => {
+                    const serviceRequestsTableBody = document.querySelector('#serviceRequestsTable tbody');
+                    serviceRequestsTableBody.innerHTML = '';
+                    data.forEach(request => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${request.assignedProfessional}</td>
+                            <td>${request.requestedDate}</td>
+                            <td>${request.status}</td>
+                        `;
+                        serviceRequestsTableBody.appendChild(row);
+                    });
+                });
+        }
+
+        // Fetch data initially and set interval to fetch data every 5 seconds
+        fetchData();
+        setInterval(fetchData, 5000);
+    </script>
+</body>
+</html>

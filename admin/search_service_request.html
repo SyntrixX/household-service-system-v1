@@ -1,0 +1,94 @@
+<html>
+<head>
+    <title>Search Service Requests</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const serviceRequests = [
+                { id: 'SR001', professional: 'John Doe', date: '2023-01-15', status: 'Closed' },
+                { id: 'SR002', professional: 'Jane Smith', date: '2023-02-20', status: 'Closed' },
+                { id: 'SR003', professional: 'Michael Brown', date: '2023-03-10', status: 'Closed' },
+                { id: 'SR004', professional: 'Emily Davis', date: '2023-04-05', status: 'Closed' },
+                { id: 'SR005', professional: 'Chris Johnson', date: '2023-05-12', status: 'Closed' },
+                { id: 'SR006', professional: 'Patricia Williams', date: '2023-06-18', status: 'Closed' },
+                { id: 'SR007', professional: 'Robert Martinez', date: '2023-07-22', status: 'Closed' },
+                { id: 'SR008', professional: 'Linda Anderson', date: '2023-08-30', status: 'Closed' },
+                { id: 'SR009', professional: 'James Thomas', date: '2023-09-15', status: 'Closed' },
+                { id: 'SR010', professional: 'Barbara Jackson', date: '2023-10-01', status: 'Closed' },
+                { id: 'SR011', professional: 'Paul White', date: '2023-10-15', status: 'Closed' },
+                { id: 'SR012', professional: 'Nancy Harris', date: '2023-11-05', status: 'Closed' },
+                { id: 'SR013', professional: 'Kevin Clark', date: '2023-11-20', status: 'Closed' },
+                { id: 'SR014', professional: 'Karen Lewis', date: '2023-12-01', status: 'Closed' },
+                { id: 'SR015', professional: 'Steven Walker', date: '2023-12-15', status: 'Closed' }
+            ];
+
+            const tableBody = document.getElementById('service-requests-body');
+
+            function renderTable() {
+                tableBody.innerHTML = '';
+                serviceRequests.forEach(request => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="py-2 px-4 border-b border-gray-200">${request.id}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${request.professional}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${request.date}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${request.status}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            renderTable();
+        });
+    </script>
+</head>
+<body class="bg-gray-100 p-6">
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="admin_home.html" class="text-white text-lg font-bold">Admin Dashboard</a>
+            <div>
+                <a href="admin_home.html" class="text-gray-300 hover:text-white mx-2">Home</a>
+                <a href="search_service_requests.html" class="text-gray-300 hover:text-white mx-2">Search</a>
+                <a href="admin_summary.html" class="text-gray-300 hover:text-white mx-2">Summary</a>
+                <a href="home.html" class="text-gray-300 hover:text-white mx-2">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container mx-auto">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h1 class="text-2xl font-bold mb-4">Search Service Requests</h1>
+            <div class="flex items-center mb-6">
+                <label for="search" class="mr-4 font-medium">Search by:</label>
+                <select id="search" class="border border-gray-300 rounded-lg p-2 mr-4">
+                    <option value="professional">Professional</option>
+                    <option value="customers">Customers</option>
+                    <option value="services">Services</option>
+                </select>
+                <span class="font-medium">Status: Closed</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                    <thead>
+                        <tr>
+                            <th class="py-2 px-4 border-b border-gray-200">ID</th>
+                            <th class="py-2 px-4 border-b border-gray-200">Assigned Professional</th>
+                            <th class="py-2 px-4 border-b border-gray-200">Requested Date</th>
+                            <th class="py-2 px-4 border-b border-gray-200">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="service-requests-body">
+                        <!-- Dynamic content will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

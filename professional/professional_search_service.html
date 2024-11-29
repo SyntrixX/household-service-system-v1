@@ -1,0 +1,103 @@
+<html>
+<head>
+    <title>Professional Search Service</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <header class="mb-8">
+            <nav class="bg-gray-800 p-4 rounded-lg shadow-md">
+                <div class="container mx-auto flex justify-between items-center">
+                    <a href="professional_home.html" class="text-white text-lg font-bold">Professional Dashboard</a>
+                    <div class="flex items-center">
+                        <a href="professional_home.html" class="text-gray-300 hover:text-white mx-2">Home</a>
+                        <a href="search_service_requests.html" class="text-gray-300 hover:text-white mx-2">Search</a>
+                        <a href="professional_summary.html" class="text-gray-300 hover:text-white mx-2">Summary</a>
+                        <a href="home.html" class="text-gray-300 hover:text-white mx-2">Logout</a>
+                        <a href="profile.html" class="text-gray-300 hover:text-white mx-2 ml-4 flex items-center">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span class="ml-2">Profile</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <h1 class="text-3xl font-bold mb-4">Professional Search Service</h1>
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
+            <div class="flex items-center mb-4">
+                <label for="searchBy" class="mr-2 font-medium">Search by:</label>
+                <select id="searchBy" class="border border-gray-300 rounded p-2 mr-4">
+                    <option value="date">Date of booking</option>
+                    <option value="location">Location name</option>
+                </select>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Search</button>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">Search Results</h2>
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b border-gray-200">ID</th>
+                        <th class="py-2 px-4 border-b border-gray-200">Customer Name</th>
+                        <th class="py-2 px-4 border-b border-gray-200">Phone No.</th>
+                        <th class="py-2 px-4 border-b border-gray-200">Location (pin code)</th>
+                        <th class="py-2 px-4 border-b border-gray-200">Date (of booking)</th>
+                        <th class="py-2 px-4 border-b border-gray-200">Rating</th>
+                    </tr>
+                </thead>
+                <tbody id="searchResults">
+                    <!-- Real-time search results will be appended here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('button').addEventListener('click', function() {
+            const searchBy = document.getElementById('searchBy').value;
+            const searchResults = document.getElementById('searchResults');
+            searchResults.innerHTML = '';
+
+            // Simulate real-time data fetching
+            const results = [
+                { id: 1, name: 'John Doe', phone: '123-456-7890', location: '12345', date: '2023-10-01', rating: 4.5 },
+                { id: 2, name: 'Jane Smith', phone: '987-654-3210', location: '54321', date: '2023-10-02', rating: 4.0 },
+                { id: 3, name: 'Alice Johnson', phone: '555-123-4567', location: '67890', date: '2023-10-03', rating: 3.5 },
+                { id: 4, name: 'Bob Brown', phone: '444-555-6666', location: '11223', date: '2023-10-04', rating: 5.0 },
+                { id: 5, name: 'Charlie Davis', phone: '333-444-5555', location: '33445', date: '2023-10-05', rating: 4.8 },
+                { id: 6, name: 'Diana Evans', phone: '222-333-4444', location: '55667', date: '2023-10-06', rating: 4.2 },
+                { id: 7, name: 'Eve Foster', phone: '111-222-3333', location: '77889', date: '2023-10-07', rating: 3.8 },
+                { id: 8, name: 'Frank Green', phone: '666-777-8888', location: '99001', date: '2023-10-08', rating: 4.7 },
+                { id: 9, name: 'Grace Harris', phone: '999-888-7777', location: '22334', date: '2023-10-09', rating: 4.1 },
+                { id: 10, name: 'Henry Irving', phone: '888-777-6666', location: '44556', date: '2023-10-10', rating: 4.3 },
+                { id: 11, name: 'Ivy Johnson', phone: '777-666-5555', location: '66778', date: '2023-10-11', rating: 4.6 },
+                { id: 12, name: 'Jack King', phone: '555-444-3333', location: '88990', date: '2023-10-12', rating: 4.4 },
+                { id: 13, name: 'Karen Lee', phone: '444-333-2222', location: '11234', date: '2023-10-13', rating: 4.9 },
+                { id: 14, name: 'Leo Martin', phone: '333-222-1111', location: '33456', date: '2023-10-14', rating: 4.0 },
+                { id: 15, name: 'Mona Nelson', phone: '222-111-0000', location: '55678', date: '2023-10-15', rating: 4.5 }
+            ];
+
+            results.forEach(result => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="py-2 px-4 border-b border-gray-200">${result.id}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${result.name}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${result.phone}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${result.location}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${result.date}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${result.rating}</td>
+                `;
+                searchResults.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<html>
+<head>
+    <title>Admin Summary</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            color: #333;
+        }
+        .chart-container {
+            background: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .chart-container h2 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: #555;
+        }
+        .chart-container .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+        .navbar-nav .nav-link {
+            color: #555;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #333;
+        }
+        .navbar-nav .nav-item.active .nav-link {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="home.html">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="search_service_request.html">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="admin_summary.html">Summary</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="home.html">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Admin Summary</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h2>Service Requests</h2>
+                    <div class="value" id="serviceRequestsValue">0</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h2>Overall Customer Ratings</h2>
+                    <div class="value" id="customerRatingsValue">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateValues() {
+            const serviceRequestsValue = document.getElementById('serviceRequestsValue');
+            const customerRatingsValue = document.getElementById('customerRatingsValue');
+
+            // Simulate real-time data updates
+            serviceRequestsValue.textContent = Math.floor(Math.random() * 100);
+            customerRatingsValue.textContent = (Math.random() * 5).toFixed(1);
+        }
+
+        setInterval(updateValues, 2000); // Update values every 2 seconds
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
