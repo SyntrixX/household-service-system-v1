@@ -1,13 +1,19 @@
+# Standard library imports
 import logging
 import traceback
 from logging.handlers import RotatingFileHandler
-from flask import Flask, render_template, redirect, url_for, request, session, flash
-from flask_sqlalchemy import SQLAlchemy
+
+# Third-party imports
+from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_bootstrap import Bootstrap
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from forms import LoginForm, RegistrationForm, ProfessionalRegistrationForm
-from models import db, User, Service
+from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from flask_migrate import Migrate
+from flask_wtf.csrf import CSRFProtect
+from werkzeug.security import generate_password_hash
+
+# Local imports
+from forms import LoginForm, ProfessionalRegistrationForm, CustomerRegistrationForm
+from models import Service, User, db
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -17,6 +23,7 @@ migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+csrf = CSRFProtect(app)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -57,36 +64,69 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm()
+    form = CustomerRegistrationForm()
     if form.validate_on_submit():
+        if User.query.filter_by(email=form.email.data).first():
+            flash('Email already exists!', 'error')
+            return render_template('register.html', form=form)
+
         user = User(
-            email=form.email.data,
-            role=form.role.data,
             name=form.name.data,
+            email=form.email.data,
             phone=form.phone.data,
             address=form.address.data,
             city=form.city.data,
             state=form.state.data,
             zip=form.zip.data,
-            country=form.country.data
+            country=form.country.data,
+            role='customer'
         )
         user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Registration successful. Please log in.', 'success')
-        return redirect(url_for('login'))
+        
+        try:
+            db.session.add(user)
+            db.session.commit()
+            flash('Registration successful! Please login.', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f'Registration error: {str(e)}\n{traceback.format_exc()}')
+            flash('An error occurred during registration.', 'error')
+            
     return render_template('register.html', form=form)
 
 @app.route('/register_professional', methods=['GET', 'POST'])
 def register_professional():
     form = ProfessionalRegistrationForm()
     if form.validate_on_submit():
-        user = User(email=form.email.data, role='professional')
+        if User.query.filter_by(email=form.email.data).first():
+            flash('Email already exists!', 'error')
+            return render_template('register_professional.html', form=form)
+
+        user = User(
+            name=form.name.data,
+            email=form.email.data,
+            phone=form.phone.data,
+            address=form.address.data,
+            city=form.city.data,
+            state=form.state.data,
+            zip=form.zip.data,
+            country=form.country.data,
+            profession=form.profession.data,  # Ensure profession field is handled
+            role='professional'
+        )
         user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Registration successful. Please log in.', 'success')
-        return redirect(url_for('login'))
+        
+        try:
+            db.session.add(user)
+            db.session.commit()
+            flash('Registration successful! Please login.', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f'Registration error: {str(e)}\n{traceback.format_exc()}')
+            flash('An error occurred during registration.', 'error')
+            
     return render_template('register_professional.html', form=form)
 
 @app.route('/admin_home')

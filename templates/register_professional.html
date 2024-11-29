@@ -17,38 +17,110 @@
     <div class="min-h-screen d-flex align-items-center justify-content-center">
         <div class="bg-white p-5 rounded-lg shadow-lg w-100" style="max-width: 500px;">
             <h2 class="text-center font-weight-bold mb-4" style="font-size: 2rem;">Professional Registration</h2>
-            <form action="{{ url_for('login') }}" method="POST">
+            <form action="{{ url_for('register_professional') }}" method="POST">
+                {{ form.hidden_tag() }}
                 <div class="form-group">
-                    <label for="full_name">Full Name</label>
-                    <input type="text" id="full_name" name="full_name" class="form-control" required>
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-control") }}
+                    {% if form.name.errors %}
+                        {% for error in form.name.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control") }}
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" class="form-control" required>
+                    {{ form.phone.label(class="form-label") }}
+                    {{ form.phone(class="form-control") }}
+                    {% if form.phone.errors %}
+                        {% for error in form.phone.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="profession">Profession</label>
-                    <input type="text" id="profession" name="profession" class="form-control" required>
+                    {{ form.address.label(class="form-label") }}
+                    {{ form.address(class="form-control") }}
+                    {% if form.address.errors %}
+                        {% for error in form.address.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="experience">Years of Experience</label>
-                    <input type="number" id="experience" name="experience" class="form-control" required>
+                    {{ form.city.label(class="form-label") }}
+                    {{ form.city(class="form-control") }}
+                    {% if form.city.errors %}
+                        {% for error in form.city.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" required>
+                    {{ form.state.label(class="form-label") }}
+                    {{ form.state(class="form-control") }}
+                    {% if form.state.errors %}
+                        {% for error in form.state.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="confirm_password">Confirm Password</label>
-                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+                    {{ form.zip.label(class="form-label") }}
+                    {{ form.zip(class="form-control") }}
+                    {% if form.zip.errors %}
+                        {% for error in form.zip.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.country.label(class="form-label") }}
+                    {{ form.country(class="form-control") }}
+                    {% if form.country.errors %}
+                        {% for error in form.country.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.profession.label(class="form-label") }}  <!-- Ensure profession field is included -->
+                    {{ form.profession(class="form-control") }}
+                    {% if form.profession.errors %}
+                        {% for error in form.profession.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control") }}
+                    {% if form.password.errors %}
+                        {% for error in form.password.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.confirm_password.label(class="form-label") }}
+                    {{ form.confirm_password(class="form-control") }}
+                    {% if form.confirm_password.errors %}
+                        {% for error in form.confirm_password.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
-                    <button type="submit" class="btn btn-primary">Register</button>
-                    <a href="login" class="text-primary">Already have an account?</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('login') }}" class="text-primary">Already have an account?</a>
                 </div>
             </form>
         </div>

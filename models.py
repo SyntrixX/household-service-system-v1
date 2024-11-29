@@ -1,9 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(UserMixin, db.Model):  # Add UserMixin here
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
@@ -15,6 +16,7 @@ class User(db.Model):
     state = db.Column(db.String(100), nullable=False)
     zip = db.Column(db.String(20), nullable=False)
     country = db.Column(db.String(100), nullable=False)
+    profession = db.Column(db.String(100), nullable=True)  # Add profession field
     services = db.relationship('Service', backref='user', lazy=True, foreign_keys='Service.professional_id')
 
     def set_password(self, password):
