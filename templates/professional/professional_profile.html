@@ -21,10 +21,10 @@
     <div class="flex-grow">
     </div>
     <div class="space-x-4">
-     <a class="text-gray-600 hover:text-gray-800" href="customer_home.html">
+     <a class="text-gray-600 hover:text-gray-800" href="{{ url_for('professional_home') }}">
       Home
      </a>
-     <a class="text-gray-600 hover:text-gray-800" href="home.html">
+     <a class="text-gray-600 hover:text-gray-800" href="{{ url_for('home') }}">
       Logout
      </a>
     </div>
@@ -33,68 +33,68 @@
   <div class="container mx-auto p-6">
    <div class="bg-white shadow-md rounded-lg p-6">
     <div class="flex items-center space-x-6 mb-4">
-     <img alt="Profile picture of the user" class="w-24 h-24 rounded-full" height="100" src="https://storage.googleapis.com/a1aa/image/9zuc8LzF0y7DChsr4pvXuuy1EVRh4MCk8kT8dBibaDJWSc9E.jpg" width="100"/>
-     <div>
-      <h1 class="text-2xl font-bold">
-       John Doe
-      </h1>
-      <p class="text-gray-600">
-       john.doe@example.com
-      </p>
-     </div>
+     {% if professional %}
+      <img alt="Profile picture of the user" class="w-24 h-24 rounded-full" height="100" src="{{ professional.profile_picture_url }}" width="100"/>
+      <div>
+       <h1 class="text-2xl font-bold">
+        {{ professional.name }}
+       </h1>
+       <p class="text-gray-600">
+        {{ professional.email }}
+       </p>
+      </div>
+     {% else %}
+      <p>Professional information is not available.</p>
+     {% endif %}
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
      <div>
       <h2 class="text-xl font-semibold mb-2">
        Personal Information
       </h2>
-      <p>
-       <strong>
-        Full Name:
-       </strong>
-       John Doe
-      </p>
-      <p>
-       <strong>
-        Email:
-       </strong>
-       john.doe@example.com
-      </p>
-      <p>
-       <strong>
-        Phone:
-       </strong>
-       (123) 456-7890
-      </p>
-      <p>
-       <strong>
-        Address:
-       </strong>
-       123 Main St, Anytown, USA
-      </p>
+      {% if professional %}
+       <p>
+        <strong>
+         Full Name:
+        </strong>
+        {{ professional.name }}
+       </p>
+       <p>
+        <strong>
+         Email:
+        </strong>
+        {{ professional.email }}
+       </p>
+       <p>
+        <strong>
+         Phone:
+        </strong>
+        {{ professional.phone }}
+       </p>
+       <p>
+        <strong>
+         Address:
+        </strong>
+        {{ professional.address }}
+       </p>
+      {% else %}
+       <p>Professional information is not available.</p>
+      {% endif %}
      </div>
      <div>
       <h2 class="text-xl font-semibold mb-2">
        Additional Information
       </h2>
-      <p>
-       <strong>
-        Gender:
-       </strong>
-       Male
-      </p>
-      <p>
-       <strong>
-        Professional:
-       </strong>
-       Software Engineer
-      </p>
-      <p>
-       <strong>
-        Experience:
-       </strong>
-       5 years
-      </p>
+      {% if professional %}
+       <p>
+        <strong>
+         Profession:
+        </strong>
+        {{ professional.profession }}
+       </p>
+      {% else %}
+       <p>Professional information is not available.</p>
+      {% endif %}
      </div>
     </div>
    </div>

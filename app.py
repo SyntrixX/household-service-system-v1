@@ -14,7 +14,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 # Local imports
 from forms import LoginForm, ProfessionalRegistrationForm, CustomerRegistrationForm
-from models import Service, User, ServiceRemark, db
+from models import Service, User, ServiceRemark, Professional, db
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -31,7 +31,10 @@ csrf = CSRFProtect(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    user = User.query.get(int(user_id))
+    if user:
+        return user
+    return Professional.query.get(int(user_id))
 
 @app.route('/')
 def home():
@@ -103,11 +106,11 @@ def register():
 def register_professional():
     form = ProfessionalRegistrationForm()
     if form.validate_on_submit():
-        if User.query.filter_by(email=form.email.data).first():
+        if Professional.query.filter_by(email=form.email.data).first():
             flash('Email already exists!', 'error')
             return render_template('register_professional.html', form=form)
 
-        user = User(
+        professional = Professional(
             name=form.name.data,
             email=form.email.data,
             phone=form.phone.data,
@@ -119,10 +122,10 @@ def register_professional():
             profession=form.profession.data,  # Ensure profession field is handled
             role='professional'
         )
-        user.set_password(form.password.data)
+        professional.set_password(form.password.data)
         
         try:
-            db.session.add(user)
+            db.session.add(professional)
             db.session.commit()
             flash('Registration successful! Please login.', 'success')
             return redirect(url_for('login'))
@@ -183,8 +186,8 @@ def profile():
 @app.route('/professional_profile', methods=['GET'])
 @login_required
 def professional_profile():
-    user = User.query.get(current_user.id)
-    return render_template('professional/professional_profile.html', user=user)
+    professional = Professional.query.filter_by(email=current_user.email).first()
+    return render_template('professional/professional_profile.html', professional=professional)
 
 @app.route('/professional_search_service', methods=['GET', 'POST'])
 @login_required
