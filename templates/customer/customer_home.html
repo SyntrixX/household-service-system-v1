@@ -1,0 +1,225 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CleanNest - Household Service System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .navbar-nav .form-inline {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+            CleanNest
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="home.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="customer_summary.html">Summary</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <form class="form-inline" method="GET">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="profile.html">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="bg-primary text-white text-center py-5">
+        <div class="container">
+            <h1>Welcome to CleanNest</h1>
+            <p class="lead">Your one-stop solution for all household services</p>
+        </div>
+    </header>
+
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Available Services</h2>
+        <div class="row" id="available-services">
+            <!-- Available services will be dynamically loaded here -->
+        </div>
+
+        <h2 class="text-center mb-4">Service History</h2>
+        <div class="row" id="service-history">
+            <!-- Service history will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <footer class="bg-light text-center text-lg-start mt-5">
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">CleanNest</h5>
+                    <p>
+                        CleanNest is your trusted partner for all household services. We connect you with experienced professionals to make your life easier.
+                    </p>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Quick Links</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="{{ url_for('index') }}" class="text-dark">Home</a>
+                        </li>
+                        <li>
+                            <a href="customer_summary.html" class="text-dark">Summary</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('logout') }}" class="text-dark">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Contact Us</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="mailto:support@cleannest.com" class="text-dark">Email: support@cleannest.com</a>
+                        </li>
+                        <li>
+                            <a href="tel:+1234567890" class="text-dark">Phone: +1 234 567 890</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3 bg-dark text-white">
+            © 2024 CleanNest. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate fetching available services from an API
+            const availableServices = [
+                {
+                    title: 'AC Repair',
+                    image: 'https://storage.googleapis.com/a1aa/image/Eh7JoUka3PbsPdl5UTVNMfphAhj4QuqOWpKGxcpGNySVVy6JA.jpg',
+                    description: 'Expert technicians to repair and service your air conditioners.',
+                    link: 'search_service.html'
+                },
+                {
+                    title: 'Plumbing',
+                    image: 'https://storage.googleapis.com/a1aa/image/NVQEzCthMtpwE9tq8pLemlsaoEguh5zuQfzlaEJNlQWrqk1TA.jpg',
+                    description: 'Professional plumbing services for all your needs.',
+                    link: 'search_service.html'
+                },
+                {
+                    title: 'TV Repair',
+                    image: 'https://storage.googleapis.com/a1aa/image/76E8LF8wyy7SGZhaJ47nWHaEZSD3UjzbIH5ceXsoVIVWVy6JA.jpg',
+                    description: 'Get your television repaired by our experienced technicians.',
+                    link: 'search_service.html'
+                },
+                {
+                    title: 'Washing Machine Repair',
+                    image: 'https://storage.googleapis.com/a1aa/image/N4METNE4HnLxEB2iiKwjT9dxkbQDghfFBRyqkmZYb8JZVy6JA.jpg',
+                    description: 'Reliable repair services for your washing machines.',
+                    link: 'search_service.html'
+                },
+                {
+                    title: 'Electrical Services',
+                    image: 'https://storage.googleapis.com/a1aa/image/q9xh7mpKw2rsMFXeVC3yAlDEH3u68zNgeP5qgzNC8hehVJrnA.jpg',
+                    description: 'Certified electricians for all your electrical needs.',
+                    link: 'search_service.html'
+                },
+                {
+                    title: 'Carpentry',
+                    image: 'https://storage.googleapis.com/a1aa/image/ZIl3QMf4SJ04JCiBPLWSfE3Hp2afkXusvdIiBA4USL4cVJrnA.jpg',
+                    description: 'Skilled carpenters for all your woodwork and furniture needs.',
+                    link: 'search_service.html'
+                }
+            ];
+
+            const availableServicesContainer = document.getElementById('available-services');
+            availableServices.forEach(service => {
+                const serviceCard = document.createElement('div');
+                serviceCard.className = 'col-md-4 mb-4';
+                serviceCard.innerHTML = `
+                    <div class="card">
+                        <img src="${service.image}" class="card-img-top" alt="Image of ${service.title}" height="400" width="600">
+                        <div class="card-body">
+                            <h5 class="card-title">${service.title}</h5>
+                            <p class="card-text">${service.description}</p>
+                            <a href="${service.link}" class="btn btn-primary">Book Now</a>
+                        </div>
+                    </div>
+                `;
+                availableServicesContainer.appendChild(serviceCard);
+            });
+
+            // Simulate fetching service history from an API
+            const serviceHistory = [
+                {
+                    id: '1',
+                    title: 'AC Repair',
+                    technician: 'John Doe',
+                    phone: '+1 234 567 890',
+                    status: 'Completed'
+                },
+                {
+                    id: '2',
+                    title: 'Plumbing',
+                    technician: 'Jane Smith',
+                    phone: '+1 234 567 891',
+                    status: 'Completed'
+                },
+                {
+                    id: '3',
+                    title: 'TV Repair',
+                    technician: 'Mike Johnson',
+                    phone: '+1 234 567 892',
+                    status: 'Completed'
+                }
+            ];
+
+            const serviceHistoryContainer = document.getElementById('service-history');
+            serviceHistory.forEach(service => {
+                const serviceCard = document.createElement('div');
+                serviceCard.className = 'col-md-12 mb-4';
+                serviceCard.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Service ID: ${service.id}</h5>
+                            <p class="card-text">Service Name: ${service.title}</p>
+                            <p class="card-text">Professional Name: ${service.technician}</p>
+                            <p class="card-text">Phone No.: ${service.phone}</p>
+                            <p class="card-text">Status: ${service.status}</p>
+                            <a href="service_remarks.html" class="btn btn-primary">Close Service</a>
+                        </div>
+                    </div>
+                `;
+                serviceHistoryContainer.appendChild(serviceCard);
+            });
+        });
+    </script>
+</body>
+</html>
