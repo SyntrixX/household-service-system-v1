@@ -180,6 +180,25 @@ def profile():
     user = User.query.get(current_user.id)
     return render_template('customer/profile.html', user=user)
 
+@app.route('/professional_profile', methods=['GET'])
+@login_required
+def professional_profile():
+    user = User.query.get(current_user.id)
+    return render_template('professional/professional_profile.html', user=user)
+
+@app.route('/professional_search_service', methods=['GET', 'POST'])
+@login_required
+def professional_search_service():
+    if request.method == 'POST':
+        # Implement search logic here
+        pass
+    return render_template('professional/professional_search_service.html')
+
+@app.route('/professional_summary', methods=['GET'])
+@login_required
+def professional_summary():
+    return render_template('professional/professional_summary.html')
+
 @app.errorhandler(500)
 def internal_error(error):
     db.session.rollback()
