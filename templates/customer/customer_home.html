@@ -119,106 +119,54 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Simulate fetching available services from an API
-            const availableServices = [
-                {
-                    title: 'AC Repair',
-                    image: 'https://storage.googleapis.com/a1aa/image/Eh7JoUka3PbsPdl5UTVNMfphAhj4QuqOWpKGxcpGNySVVy6JA.jpg',
-                    description: 'Expert technicians to repair and service your air conditioners.',
-                    link: 'search_service.html'
-                },
-                {
-                    title: 'Plumbing',
-                    image: 'https://storage.googleapis.com/a1aa/image/NVQEzCthMtpwE9tq8pLemlsaoEguh5zuQfzlaEJNlQWrqk1TA.jpg',
-                    description: 'Professional plumbing services for all your needs.',
-                    link: 'search_service.html'
-                },
-                {
-                    title: 'TV Repair',
-                    image: 'https://storage.googleapis.com/a1aa/image/76E8LF8wyy7SGZhaJ47nWHaEZSD3UjzbIH5ceXsoVIVWVy6JA.jpg',
-                    description: 'Get your television repaired by our experienced technicians.',
-                    link: 'search_service.html'
-                },
-                {
-                    title: 'Washing Machine Repair',
-                    image: 'https://storage.googleapis.com/a1aa/image/N4METNE4HnLxEB2iiKwjT9dxkbQDghfFBRyqkmZYb8JZVy6JA.jpg',
-                    description: 'Reliable repair services for your washing machines.',
-                    link: 'search_service.html'
-                },
-                {
-                    title: 'Electrical Services',
-                    image: 'https://storage.googleapis.com/a1aa/image/q9xh7mpKw2rsMFXeVC3yAlDEH3u68zNgeP5qgzNC8hehVJrnA.jpg',
-                    description: 'Certified electricians for all your electrical needs.',
-                    link: 'search_service.html'
-                },
-                {
-                    title: 'Carpentry',
-                    image: 'https://storage.googleapis.com/a1aa/image/ZIl3QMf4SJ04JCiBPLWSfE3Hp2afkXusvdIiBA4USL4cVJrnA.jpg',
-                    description: 'Skilled carpenters for all your woodwork and furniture needs.',
-                    link: 'search_service.html'
-                }
-            ];
+            fetch('/get_professionals')
+                .then(response => response.json())
+                .then(professionals => {
+                    const availableServicesContainer = document.getElementById('available-services');
+                    professionals.forEach(professional => {
+                        const serviceCard = document.createElement('div');
+                        serviceCard.className = 'col-md-4 mb-4';
+                        serviceCard.innerHTML = `
+                            <div class="card">
+                                <img src="${professional.image}" class="card-img-top" alt="Image of ${professional.profession}" height="400" width="600">
+                                <div class="card-body">
+                                    <h5 class="card-title">${professional.profession}</h5>
+                                    <p class="card-text">${professional.description}</p>
+                                    <p class="card-text">Professional: ${professional.name}</p>
+                                    <p class="card-text">Phone: ${professional.phone}</p>
+                                    <button class="btn btn-primary" onclick="bookService(${professional.id})">Book Now</button>
+                                </div>
+                            </div>
+                        `;
+                        availableServicesContainer.appendChild(serviceCard);
+                    });
+                });
 
-            const availableServicesContainer = document.getElementById('available-services');
-            availableServices.forEach(service => {
-                const serviceCard = document.createElement('div');
-                serviceCard.className = 'col-md-4 mb-4';
-                serviceCard.innerHTML = `
-                    <div class="card">
-                        <img src="${service.image}" class="card-img-top" alt="Image of ${service.title}" height="400" width="600">
-                        <div class="card-body">
-                            <h5 class="card-title">${service.title}</h5>
-                            <p class="card-text">${service.description}</p>
-                            <a href="${service.link}" class="btn btn-primary">Book Now</a>
-                        </div>
-                    </div>
-                `;
-                availableServicesContainer.appendChild(serviceCard);
-            });
-
-            // Simulate fetching service history from an API
-            const serviceHistory = [
-                {
-                    id: '1',
-                    title: 'AC Repair',
-                    technician: 'John Doe',
-                    phone: '+1 234 567 890',
-                    status: 'Completed'
-                },
-                {
-                    id: '2',
-                    title: 'Plumbing',
-                    technician: 'Jane Smith',
-                    phone: '+1 234 567 891',
-                    status: 'Completed'
-                },
-                {
-                    id: '3',
-                    title: 'TV Repair',
-                    technician: 'Mike Johnson',
-                    phone: '+1 234 567 892',
-                    status: 'Completed'
-                }
-            ];
-
-            const serviceHistoryContainer = document.getElementById('service-history');
-            serviceHistory.forEach(service => {
-                const serviceCard = document.createElement('div');
-                serviceCard.className = 'col-md-12 mb-4';
-                serviceCard.innerHTML = `
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Service ID: ${service.id}</h5>
-                            <p class="card-text">Service Name: ${service.title}</p>
-                            <p class="card-text">Professional Name: ${service.technician}</p>
-                            <p class="card-text">Phone No.: ${service.phone}</p>
-                            <p class="card-text">Status: ${service.status}</p>
-                            <a href="{{ url_for('service_remarks') }}" class="btn btn-primary">Close Service</a>
-                        </div>
-                    </div>
-                `;
-                serviceHistoryContainer.appendChild(serviceCard);
-            });
+            function bookService(professionalId) {
+                fetch(`/book_service/${professionalId}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(professional => {
+                        if (professional.error) {
+                            alert(professional.error);
+                            return;
+                        }
+                        const serviceHistoryContainer = document.getElementById('service-history');
+                        const serviceCard = document.createElement('div');
+                        serviceCard.className = 'col-md-12 mb-4';
+                        serviceCard.innerHTML = `
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Service ID: ${professional.id}</h5>
+                                    <p class="card-text">Service Name: ${professional.profession}</p>
+                                    <p class="card-text">Professional Name: ${professional.name}</p>
+                                    <p class="card-text">Phone No.: ${professional.phone}</p>
+                                    <p class="card-text">Status: Booked</p>
+                                </div>
+                            </div>
+                        `;
+                        serviceHistoryContainer.appendChild(serviceCard);
+                    });
+            }
         });
     </script>
 </body>

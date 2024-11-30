@@ -20,7 +20,7 @@
             </a>
             <div class="hidden md:flex space-x-4">
                 <a href="{{ url_for('customer_home') }}" class="text-gray-700 hover:text-indigo-600">Home</a>
-                <a href={{ url_for('customer_summary') }}" class="text-gray-700 hover:text-indigo-600">Summary</a>
+                <a href="{{ url_for('customer_summary') }}" class="text-gray-700 hover:text-indigo-600">Summary</a>
                 <a href="{{ url_for('home') }}" class="text-gray-700 hover:text-indigo-600">Logout</a>
             </div>
             <div class="md:hidden">
@@ -30,7 +30,7 @@
             </div>
         </div>
         <div id="mobile-menu" class="hidden md:hidden">
-            <a href="{{ url_for('home') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Home</a>
+            <a href="{{ url_for('customer_home') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Home</a>
             <a href="{{ url_for('customer_summary') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Summary</a>
             <a href="{{ url_for('home') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Logout</a>
         </div>
@@ -40,16 +40,23 @@
         <div class="mb-6">
             <label for="search" class="block text-lg font-medium text-gray-700">Search By:</label>
             <div class="relative mt-2">
-                <input type="text" id="search" class="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter service name...">
-                <button class="absolute inset-y-0 right-0 px-4 py-2 bg-indigo-600 text-white rounded-r-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <i class="fas fa-search"></i>
-                </button>
+                <form class="form-inline" action="{{ url_for('search_service') }}" method="post">
+                    <input class="form-control mr-sm-2" type="search" name="search_query" placeholder="Search" aria-label="Search" required>
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
             </div>
         </div>
 
         <h2 class="text-2xl font-semibold mb-4">Best Services</h2>
         <div id="services-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Real-time service items will be injected here by JavaScript -->
+            {% for professional in professionals %}
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold mb-2">{{ professional.name }}</h3>
+                <p class="text-gray-600 mb-2">Profession: {{ professional.profession }}</p>
+                <p class="text-gray-600 mb-2">Location: {{ professional.city }}, {{ professional.state }}</p>
+                <button class="mt-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Book</button>
+            </div>
+            {% endfor %}
         </div>
 
         <h2 class="text-2xl font-semibold mt-8 mb-4">Service History</h2>
@@ -61,11 +68,7 @@
     <script>
         document.getElementById('menu-button').addEventListener('click', function() {
             var menu = document.getElementById('mobile-menu');
-            if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
-            } else {
-                menu.classList.add('hidden');
-            }
+            menu.classList.toggle('hidden');
         });
 
         // Fetch real-time data from the database

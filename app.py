@@ -1,10 +1,8 @@
-# Standard library imports
 import logging
 import traceback
 from logging.handlers import RotatingFileHandler
 
-# Third-party imports
-from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask import Flask, flash, redirect, render_template, request, session, url_for, jsonify
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from flask_migrate import Migrate
@@ -12,22 +10,26 @@ from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 
-# Local imports
 from forms import LoginForm, ProfessionalRegistrationForm, CustomerRegistrationForm
-from models import Service, User, ServiceRemark, Professional, db
+from models import Service, User, ServiceRemark, Professional, Booking, db
+# Remove the import for the API blueprint
+# from views import api  
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'your_secret_key'
 
-db.init_app(app)  # Ensure the SQLAlchemy instance is properly initialized with the Flask app
+db.init_app(app)  # ensure the SQLAlchemy instance is properly initialized with the Flask app
 
 migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 csrf = CSRFProtect(app)
+
+# Remove the API blueprint registration
+# app.register_blueprint(api)  
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -47,7 +49,7 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
+    if (form.validate_on_submit()):
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
@@ -119,7 +121,7 @@ def register_professional():
             state=form.state.data,
             zip=form.zip.data,
             country=form.country.data,
-            profession=form.profession.data,  # Ensure profession field is handled
+            profession=form.profession.data,  # ensure profession field is handled
             role='professional'
         )
         professional.set_password(form.password.data)
@@ -154,13 +156,19 @@ def customer_home():
 @app.route('/customer_summary', methods=['GET'])
 @login_required
 def customer_summary():
-    return render_template('customer/customer_summary.html')
+    requested_count = Booking.query.filter_by(customer_id=current_user.id).count()
+    closed_count = Booking.query.join(Service).filter(Booking.customer_id == current_user.id, Service.status == 'completed').count()
+    assigned_count = Booking.query.join(Service).filter(Booking.customer_id == current_user.id, Service.status == 'accepted').count()
+    
+    return render_template('customer/customer_summary.html', requested_count=requested_count, closed_count=closed_count, assigned_count=assigned_count)
 
 @app.route('/search_service', methods=['GET', 'POST'])
 @login_required
+@csrf.exempt  # Disable CSRF protection for this route
 def search_service():
     if request.method == 'POST':
-        # Implement search logic here
+        search_query = request.form.get('search_query')
+        # Add logic to handle search query
         pass
     return render_template('customer/search_service.html')
 
@@ -193,7 +201,6 @@ def professional_profile():
 @login_required
 def professional_search_service():
     if request.method == 'POST':
-        # Implement search logic here
         pass
     return render_template('professional/professional_search_service.html')
 
@@ -207,14 +214,56 @@ def professional_summary():
 def admin_summary():
     num_customers = User.query.filter_by(role='customer').count()
     num_professionals = Professional.query.count()
-    overall_rating = 0  # Remove calculation of overall_rating
-    service_requests = 0  # Set service requests to zero
+    overall_rating = 0  
+    service_requests = 0 
     return render_template('admin/admin_summary.html', num_customers=num_customers, num_professionals=num_professionals, overall_rating=overall_rating, service_requests=service_requests)
 
 @app.route('/search_service_request')
 @login_required
 def search_service_request():
     return render_template('admin/search_service_request.html')
+
+@app.route('/get_professionals', methods=['GET'])
+def get_professionals():
+    professionals = Professional.query.all()
+    professional_list = [{
+        'id': pro.id,
+        'name': pro.name,
+        'profession': pro.profession,
+        'phone': pro.phone,
+        'image': 'https://via.placeholder.com/150',  # Placeholder image URL
+        'description': 'Description for ' + pro.profession
+    } for pro in professionals]
+    return jsonify(professional_list)
+
+@app.route('/book_service/<int:professional_id>', methods=['POST'])
+@login_required
+def book_service(professional_id):
+    professional = Professional.query.get(professional_id)
+    if not professional:
+        return jsonify({'error': 'Professional not found'}), 404
+
+    # Simulate booking logic
+    service = Service(
+        name=professional.profession,
+        description=f'Service booked with {professional.name}',
+        category=professional.profession,
+        location=professional.city,
+        professional_id=professional.id,
+        customer_id=current_user.id,
+        status='Booked',
+        rating=0,
+        price=100  # Example price
+    )
+    db.session.add(service)
+    db.session.commit()
+
+    return jsonify({
+        'id': service.id,
+        'name': professional.name,
+        'profession': professional.profession,
+        'phone': professional.phone
+    })
 
 @app.errorhandler(500)
 def internal_error(error):
@@ -226,7 +275,7 @@ def internal_error(error):
 with app.app_context():
     db.create_all()
 
-import views  # Ensure views are imported to register the routes
+import views  
 
 if __name__ == '__main__':
     handler = RotatingFileHandler('error.log', maxBytes=10000, backupCount=1)
