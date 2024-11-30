@@ -145,28 +145,41 @@
             function bookService(professionalId) {
                 fetch(`/book_service/${professionalId}`, { method: 'POST' })
                     .then(response => response.json())
-                    .then(professional => {
-                        if (professional.error) {
-                            alert(professional.error);
+                    .then(service => {
+                        if (service.error) {
+                            alert(service.error);
                             return;
                         }
-                        const serviceHistoryContainer = document.getElementById('service-history');
-                        const serviceCard = document.createElement('div');
-                        serviceCard.className = 'col-md-12 mb-4';
-                        serviceCard.innerHTML = `
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Service ID: ${professional.id}</h5>
-                                    <p class="card-text">Service Name: ${professional.profession}</p>
-                                    <p class="card-text">Professional Name: ${professional.name}</p>
-                                    <p class="card-text">Phone No.: ${professional.phone}</p>
-                                    <p class="card-text">Status: Booked</p>
-                                </div>
-                            </div>
-                        `;
-                        serviceHistoryContainer.appendChild(serviceCard);
+                        loadServiceHistory();
                     });
             }
+
+            function loadServiceHistory() {
+                fetch('/get_service_history')
+                    .then(response => response.json())
+                    .then(services => {
+                        const serviceHistoryContainer = document.getElementById('service-history');
+                        serviceHistoryContainer.innerHTML = '';
+                        services.forEach(service => {
+                            const serviceCard = document.createElement('div');
+                            serviceCard.className = 'col-md-12 mb-4';
+                            serviceCard.innerHTML = `
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Service ID: ${service.id}</h5>
+                                        <p class="card-text">Service Name: ${service.name}</p>
+                                        <p class="card-text">Professional Name: ${service.professional_name}</p>
+                                        <p class="card-text">Phone No.: ${service.phone}</p>
+                                        <p class="card-text">Status: ${service.status}</p>
+                                    </div>
+                                </div>
+                            `;
+                            serviceHistoryContainer.appendChild(serviceCard);
+                        });
+                    });
+            }
+
+            loadServiceHistory();
         });
     </script>
 </body>

@@ -165,7 +165,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Real-time data will be inserted here -->
+                    {% for professional in professionals %}
+                    <tr>
+                        <td>{{ professional.id }}</td>
+                        <td>{{ professional.name }}</td>
+                        <td>{{ professional.experience }}</td>
+                        <td>{{ professional.profession }}</td>
+                        <td>
+                            <span class="action-btn edit-btn" data-id="{{ professional.id }}" data-name="{{ professional.name }}" data-experience="{{ professional.experience }}" data-service="{{ professional.profession }}">Edit</span> | 
+                            <span class="action-btn delete-btn" data-id="{{ professional.id }}">Delete</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

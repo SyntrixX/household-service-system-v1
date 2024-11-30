@@ -141,7 +141,8 @@ def register_professional():
 @app.route('/admin_home')
 @login_required
 def admin_home():
-    return render_template('admin/admin_home.html')
+    professionals = Professional.query.all()
+    return render_template('admin/admin_home.html', professionals=professionals)
 
 @app.route('/professional_home')
 @login_required
@@ -230,6 +231,7 @@ def get_professionals():
         'id': pro.id,
         'name': pro.name,
         'profession': pro.profession,
+        'experience': pro.experience,
         'phone': pro.phone,
         'image': 'https://via.placeholder.com/150',  # Placeholder image URL
         'description': 'Description for ' + pro.profession
@@ -264,6 +266,53 @@ def book_service(professional_id):
         'profession': professional.profession,
         'phone': professional.phone
     })
+
+@app.route('/accept_service/<int:service_id>', methods=['POST'])
+@login_required
+def accept_service(service_id):
+    service = Service.query.get(service_id)
+    if service and service.professional_id == current_user.id:
+        service.status = 'accepted'
+        db.session.commit()
+        return jsonify({'success': True})
+    return jsonify({'success': False})
+
+@app.route('/reject_service/<int:service_id>', methods=['POST'])
+@login_required
+def reject_service(service_id):
+    service = Service.query.get(service_id)
+    if service and service.professional_id == current_user.id:
+        service.status = 'rejected'
+        db.session.commit()
+        return jsonify({'success': True})
+    return jsonify({'success': False})
+
+@app.route('/get_service_history', methods=['GET'])
+@login_required
+def get_service_history():
+    services = Service.query.filter_by(customer_id=current_user.id).all()
+    service_list = [{
+        'id': service.id,
+        'name': service.name,
+        'professional_name': service.user.name,
+        'phone': service.user.phone,
+        'status': service.status
+    } for service in services]
+    return jsonify(service_list)
+
+@app.route('/get_closed_services', methods=['GET'])
+@login_required
+def get_closed_services():
+    services = Service.query.filter_by(professional_id=current_user.id, status='completed').all()
+    service_list = [{
+        'id': service.id,
+        'name': service.user.name,
+        'phone': service.user.phone,
+        'location': service.location,
+        'date': service.bookings[0].service.date if service.bookings else 'N/A',
+        'rating': service.rating
+    } for service in services]
+    return jsonify(service_list)
 
 @app.errorhandler(500)
 def internal_error(error):

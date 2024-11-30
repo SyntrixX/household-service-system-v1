@@ -18,11 +18,13 @@
                 { id: 3, name: 'Alice Johnson', phone: '555-123-4567', location: '54321' }
             ];
 
-            const closedServices = [
-                { id: 1, name: 'Michael Brown', phone: '321-654-9870', location: '11223', date: '2023-10-01', rating: 4.5 },
-                { id: 2, name: 'Emily Davis', phone: '654-321-0987', location: '33445', date: '2023-10-02', rating: 4.0 },
-                { id: 3, name: 'David Wilson', phone: '789-012-3456', location: '55667', date: '2023-10-03', rating: 5.0 }
-            ];
+            function fetchClosedServices() {
+                fetch('/get_closed_services')
+                    .then(response => response.json())
+                    .then(services => {
+                        renderTable(services, 'closed-services-body');
+                    });
+            }
 
             function renderTable(data, tableId) {
                 const tableBody = document.getElementById(tableId);
@@ -48,17 +50,33 @@
             }
 
             function acceptService(serviceId) {
-                alert(`Service with ID ${serviceId} has been accepted.`);
-                // Here you can add the logic to notify the customer
+                fetch(`/accept_service/${serviceId}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(`Service with ID ${serviceId} has been accepted.`);
+                            renderTable(todaysServices, 'todays-services-body');
+                        } else {
+                            alert('Failed to accept service.');
+                        }
+                    });
             }
 
             function rejectService(serviceId) {
-                alert(`Service with ID ${serviceId} has been rejected.`);
-                // Here you can add the logic to notify the customer
+                fetch(`/reject_service/${serviceId}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(`Service with ID ${serviceId} has been rejected.`);
+                            renderTable(todaysServices, 'todays-services-body');
+                        } else {
+                            alert('Failed to reject service.');
+                        }
+                    });
             }
 
             renderTable(todaysServices, 'todays-services-body');
-            renderTable(closedServices, 'closed-services-body');
+            fetchClosedServices();
         });
     </script>
 </head>
